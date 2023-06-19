@@ -97,3 +97,13 @@ export async function fnCreateAttachmentPresignedUrl(
   todosAccess.fnUpdateTodoAttachmentUrl(userId, todoId)
   return attachmentUtils.fnGetUploadUrl(todoId)
 }
+
+/**
+ * name: fnCreateAttachmentPresignedUrl
+ * @param: todoId
+ * @return {todosAccess} A promise
+ * description: Upload image
+ */
+export async function fnSearchTodo(key: string, userId: string) {
+  return await todosAccess.fnSearchItem(key, userId)
+}

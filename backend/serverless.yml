@@ -1,7 +1,7 @@
 # TODO: Change the name of the org
 org: hungtq24
-app: serverless-todo-app-pj4
-service: serverless-todo-app-pj4
+app: serverless-todo-app-pj5
+service: serverless-todo-app-pj5
 frameworkVersion: '3.32.2'
 
 plugins:
@@ -26,25 +26,16 @@ provider:
   # Use these variables in the functions and resouorces section below. For example,
   # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
-    TODOS_TABLE: Serverless-c5-todo-app-pj4-${self:provider.stage}
+    TODOS_TABLE: Serverless-c5-todo-app-pj5-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: serverless-c5-todo-app-pj4-images-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: serverless-c5-todo-app-pj5-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
-    PROJECT_NAME: serverless-todo-app-pj4
+    PROJECT_NAME: serverless-todo-app-pj5
     INDEX_NAME: ${self:provider.environment.TODOS_CREATED_AT_INDEX}
 
   logs:
     # Enable API Gateway logs
     restApi: true
-
-  # iam:
-  #   role:
-  #     statements:
-  #       - Effect: Allow
-  #         Action:
-  #           - xray:PutTelemetryRecords
-  #           - xray:PutTraceSegments
-  #         Resource: '*'
 
 custom:
   documentation:
@@ -212,6 +203,27 @@ functions:
           - xray:PutTelemetryRecords
         Resource:
           - '*'
+
+  # TODO: Configure this function
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements
+  # Search function
+  SearchTodos:
+    handler: src/lambda/http/searchTodo.handler
+    events:
+      - http:
+          method: get
+          authorizer: Auth
+          path: search
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                key: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
 resources:
   Resources:
